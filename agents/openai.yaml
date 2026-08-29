@@ -1,0 +1,5 @@
+interface:
+  display_name: "Planners Quanti Box"
+  short_description: "先推荐并确认方法，再交付可追溯定量报告"
+  brand_color: "#18B6C9"
+  default_prompt: "Use $planners-quanti-box to inspect my data, recommend an analysis method with expected outputs and limits, wait for my confirmation, then deliver a traceable HTML report."

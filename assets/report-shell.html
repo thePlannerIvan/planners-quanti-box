@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+{{REPORT_FINGERPRINTS}}
+<title>{{TITLE}}</title>
+<style>
+:root{--ink:#17212b;--paper:#f5f7f8;--card:#fff;--muted:#66727d;--line:#d8dee3;--navy:#12324a;--blue:#1769aa;--cyan:#19a9bb;--soft:#eef3f6;--fact:#16616d;--interpret:#315f9b;--hypothesis:#8a5b19;--recommend:#60468f;--shadow:0 10px 28px rgba(22,40,54,.055);--radius:8px}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);font:15px/1.68 Inter,"IBM Plex Sans","SF Pro Display","Avenir Next","PingFang SC","Noto Sans CJK SC",sans-serif}
+a{color:inherit}
+.topbar{min-height:58px;padding:10px clamp(18px,4vw,56px);display:flex;align-items:center;gap:34px;background:rgba(18,50,74,.98);color:#fff;position:sticky;top:0;z-index:10}
+.brand{font:800 15px/1 "Avenir Next",sans-serif;letter-spacing:.18em;white-space:nowrap}.brand::before{content:"";display:inline-block;width:9px;height:9px;background:var(--cyan);border-radius:50%;margin-right:10px;box-shadow:0 0 18px rgba(24,182,201,.8)}.personal-watermark{margin-left:auto;color:#9fb8c5;font-size:10px;font-weight:650;letter-spacing:.06em;white-space:nowrap}
+nav{display:flex;gap:19px;overflow:auto;scrollbar-width:none}nav a{color:#cfe4ec;text-decoration:none;font-size:12px;white-space:nowrap}nav a:hover,nav a:focus{color:#fff}
+main{max-width:1160px;margin:0 auto;padding:0 clamp(18px,5vw,64px) 96px}.hero{padding:48px 0 42px;border-bottom:1px solid var(--line)}
+.meta{display:flex;gap:14px 24px;flex-wrap:wrap;margin-bottom:25px;color:var(--muted);font-size:11px}.meta span{padding:0}.meta b{display:block;color:var(--navy);margin:0 0 1px;font-size:9px;letter-spacing:.08em;text-transform:uppercase}
+.eyebrow,.section-number{margin:0 0 12px;color:var(--blue);font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase}
+h1{font:760 clamp(30px,4vw,46px)/1.18 Inter,"IBM Plex Sans","SF Pro Display","PingFang SC","Noto Sans CJK SC",sans-serif;letter-spacing:-.038em;max-width:880px;margin:0 0 16px;color:var(--navy)}
+.answer{max-width:790px;font-size:15px;line-height:1.68;color:#40515e;margin:0 0 14px}.hero-evidence{max-width:800px;margin:0 0 15px;padding:0;list-style:none;color:#44525d;font-size:13px}.hero-evidence li{position:relative;margin:6px 0;padding-left:15px}.hero-evidence li::before{content:"";position:absolute;left:0;top:.72em;width:5px;height:5px;background:var(--blue)}.hero-action{max-width:800px;margin:0 0 25px;padding:10px 13px;border-left:2px solid var(--blue);background:#edf3f7;font-size:12px}.hero-action b{margin-right:10px;color:var(--navy)}
+.conclusion-links{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin:0 0 22px}.conclusion-link{display:grid;grid-template-columns:28px 1fr;gap:4px 8px;padding:15px 16px 15px 0;text-decoration:none;border-right:1px solid var(--line)}.conclusion-link:last-child{border-right:0}.conclusion-link>span{grid-row:1/4;color:var(--blue);font-size:10px;font-weight:800}.conclusion-link strong{font-size:14px;line-height:1.35}.conclusion-link small{font-size:11px;color:var(--muted)}.conclusion-link em{font-size:10px;color:var(--blue);font-style:normal;font-weight:700}.conclusion-link:hover strong{text-decoration:underline}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px}.kpi{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:15px 17px}.kpi span,.kpi small{display:block;color:var(--muted);font-size:11px}.kpi strong{display:block;font-size:28px;line-height:1.2;color:var(--navy);margin:7px 0 4px;font-variant-numeric:tabular-nums}
+.limitation{margin-top:20px;padding:14px 18px;border-left:3px solid #d99a34;background:#fff8e9;color:#74531c;font-size:13px}.limitation b{margin-right:10px}
+section:not(.hero){padding:54px 0 10px}h2{font:720 clamp(25px,3vw,36px)/1.24 Inter,"IBM Plex Sans","SF Pro Display","PingFang SC","Noto Sans CJK SC",sans-serif;letter-spacing:-.025em;margin:0 0 11px;color:var(--navy)}.lede{max-width:800px;color:var(--muted);font-size:15px;margin:0 0 20px}.appendix{opacity:.94}
+.finding-list{margin:22px 0}.finding{display:grid;grid-template-columns:120px minmax(0,1fr);column-gap:26px;background:transparent;border-top:1px solid var(--line);padding:25px 0}.finding+.finding{margin-top:6px}.finding-head{grid-column:1;grid-row:1/5;display:flex;align-items:flex-start;gap:6px;flex-wrap:wrap}.badge,.confidence{font-size:9px;font-weight:800;letter-spacing:.06em;padding:3px 6px;border-radius:3px}.badge{background:#e7f2f4;color:var(--fact)}.badge.interpretation{background:#e9eef8;color:var(--interpret)}.badge.hypothesis{background:#f8efdf;color:var(--hypothesis)}.badge.recommendation{background:#eee9f7;color:var(--recommend)}.confidence{border:1px solid var(--line);color:var(--muted)}.finding h3{grid-column:2;font-size:17px;line-height:1.48;margin:0 0 7px}.finding p{grid-column:2;font-size:14px;margin:5px 0}.finding .evidence{padding-top:9px;color:var(--muted);font-size:12px}.finding-metrics{grid-column:2;color:#8b969f;font-size:9px}
+.chart-card{margin:32px 0 42px;background:var(--card);border:1px solid var(--line);border-radius:5px;padding:24px clamp(16px,3vw,30px);box-shadow:0 5px 18px rgba(22,40,54,.035)}figcaption span{font-size:9px;color:var(--blue);font-weight:800;letter-spacing:.12em}figcaption h3{font:700 20px/1.4 Inter,"IBM Plex Sans","SF Pro Display","PingFang SC","Noto Sans CJK SC",sans-serif;margin:5px 0;color:var(--navy)}figcaption p,.chart-note,.chart-source{font-size:10px;color:var(--muted)}.chart-source{margin:9px 0 0}.chart-note{margin:3px 0 0}.chart-reading-guide{display:flex;align-items:flex-start;gap:12px;margin:13px 0 2px;padding:10px 12px;background:#f1f6f8;border-left:2px solid var(--cyan);color:#40515e;font-size:11px}.chart-reading-guide b{flex:0 0 auto;color:var(--navy);font-size:10px;letter-spacing:.06em}.chart-reading-guide ol{display:flex;gap:18px;flex-wrap:wrap;margin:0;padding-left:18px}.chart-reading-guide li{margin:0;max-width:260px}
+.chart-tools{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:14px 0 4px}.chart-tools button{appearance:none;border:1px solid var(--line);border-radius:4px;background:#f7fafb;color:var(--navy);padding:7px 10px;font:700 10px/1 "Avenir Next","PingFang SC",sans-serif;cursor:pointer}.chart-tools button:hover,.chart-tools button:focus-visible{border-color:var(--cyan);background:#edf7f9}.tool-status{color:var(--fact);font-size:11px}.metric{font-variant-numeric:tabular-nums}
+.chart-svg{display:block;width:100%;height:auto;min-height:170px;margin:10px 0}.bar{fill:#aeb9c2}.bar.is-highlight{fill:var(--blue)}.segment-0{fill:#143f5a}.segment-1{fill:#2b718e}.segment-2{fill:#65a9ba}.segment-3{fill:#a5c9d1}.segment-4{fill:#d6e5e8}.heat-cell{stroke:#fff;stroke-width:1}.box-fill{fill:#dceaf0}.box-line{stroke:var(--navy);stroke-width:2}.strip-dot{fill:#7e919e;fill-opacity:.55}.bubble{fill:#6aa6bb;fill-opacity:.58;stroke:#fff;stroke-width:1.5}.chart-label,.chart-value,.axis-label,.benchmark-label,.legend-label{font:11px Inter,"IBM Plex Sans","PingFang SC",sans-serif;fill:#5a6873}.chart-value{font-weight:700;fill:var(--navy)}.axis{stroke:#aeb8c0;stroke-width:1}.grid{stroke:#e2e7ea;stroke-width:1}.benchmark{stroke:#697783;stroke-width:1.5;stroke-dasharray:4 4}.benchmark-label{font-size:9px}.line{fill:none;stroke:var(--blue);stroke-width:2.5;stroke-linejoin:round;stroke-linecap:round}.series-1{stroke:#67808f}.series-2{stroke:#19a9bb}.series-3{stroke:#9d7a42}.line-dot{fill:#fff;stroke:#80909c;stroke-width:2}.line-dot.is-highlight{fill:var(--blue);stroke:var(--blue)}.dot{fill:#85949f}.dot.is-highlight{fill:var(--blue)}.dot.start{fill:#fff;stroke:#7c8993;stroke-width:2}.dot-stem,.dumbbell-line{stroke:#aeb9c2;stroke-width:2}
+details{background:rgba(251,254,255,.72);border:1px solid var(--line);border-radius:10px;margin:10px 0}summary{cursor:pointer;padding:13px 16px;font-weight:700;color:var(--navy)}details>div{padding:0 16px 14px;color:var(--muted)}.data-table{box-shadow:none;background:#f5fafb}.data-table summary{font-size:12px}
+.table-scroll{overflow:auto;border:1px solid var(--line);border-radius:10px;margin:16px 0}table{width:100%;border-collapse:collapse;background:var(--card);font-size:13px}th,td{padding:10px 12px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap}th{color:var(--navy);background:#e8f2f5}tr:last-child td,tr:last-child th{border-bottom:0}
+.method,.next{border-top:1px solid var(--line)}li{margin:5px 0}footer{text-align:center;padding:28px;color:var(--muted);font-size:11px;border-top:1px solid var(--line)}
+:focus-visible{outline:3px solid rgba(24,182,201,.42);outline-offset:3px}
+@media(max-width:720px){.topbar{align-items:flex-start;flex-direction:column;gap:7px}.personal-watermark{margin-left:0;font-size:9px}.hero{padding-top:38px}.meta{display:grid;grid-template-columns:1fr 1fr;margin-bottom:22px}.conclusion-links{grid-template-columns:1fr}.conclusion-link{border-right:0;border-bottom:1px solid var(--line)}.conclusion-link:last-child{border-bottom:0}.kpis{grid-template-columns:1fr 1fr}.finding{grid-template-columns:1fr;gap:8px}.finding-head,.finding h3,.finding p,.finding-metrics{grid-column:1;grid-row:auto}.chart-card{padding:17px 8px}.chart-reading-guide,.chart-reading-guide ol{display:block}.chart-reading-guide ol{margin-top:5px}.chart-reading-guide li{margin:3px 0;max-width:none}.chart-svg{overflow:visible}.answer{font-size:15px}h1{font-size:35px;letter-spacing:-.035em}}
+@media(max-width:430px){.kpis{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation:none!important;transition:none!important}}
+@media print{body{background:#fff;font-size:11pt}.topbar{position:static;background:#fff;color:#000;border-bottom:1px solid #999}.topbar nav{display:none}.brand{color:#000}.personal-watermark{color:#555;margin-left:auto}main{max-width:none;padding:0 12mm}.hero{padding-top:18mm}.finding,.chart-card,.kpi{box-shadow:none;break-inside:avoid;background:#fff}details{display:block}details>div{display:block}.data-table{display:none}footer{display:none}}
+</style>
+</head>
+<body>
+<noscript><p style="padding:12px;background:#fff4d8;color:#684b13">本报告的核心文本、表格和 SVG 不需要 JavaScript。</p></noscript>
+{{REPORT_CONTENT}}
+<script>
+(() => {
+  const safeName = (value) => String(value || 'quanti-chart').replace(/[^a-z0-9\u4e00-\u9fff_-]+/gi, '-').replace(/^-+|-+$/g, '') || 'quanti-chart';
+  const download = (name, type, content) => {
+    const blob = new Blob([content], { type });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url; link.download = name; link.click();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  };
+  const rows = (figure) => [...figure.querySelectorAll('.data-table tr')].map((row) => [...row.children].map((cell) => cell.textContent.trim()));
+  const csv = (data) => '\ufeff' + data.map((row) => row.map((cell) => `"${String(cell).replaceAll('"', '""')}"`).join(',')).join('\n');
+  const copyText = async (value) => {
+    if (navigator.clipboard?.writeText && window.isSecureContext) return navigator.clipboard.writeText(value);
+    const area = document.createElement('textarea');
+    area.value = value; area.setAttribute('readonly', ''); area.style.position = 'fixed'; area.style.opacity = '0';
+    document.body.appendChild(area); area.select();
+    const copied = document.execCommand('copy'); area.remove();
+    if (!copied) throw new Error('Copy unavailable');
+  };
+  document.addEventListener('click', async (event) => {
+    const button = event.target.closest('[data-action]');
+    if (!button) return;
+    const figure = button.closest('.chart-card');
+    const title = figure.querySelector('figcaption h3')?.textContent.trim();
+    const status = figure.querySelector('.tool-status');
+    try {
+      if (button.dataset.action === 'copy-data') {
+        const value = rows(figure).map((row) => row.join('\t')).join('\n');
+        await copyText(value);
+        status.textContent = '已复制';
+      } else if (button.dataset.action === 'download-csv') {
+        download(`${safeName(title)}.csv`, 'text/csv;charset=utf-8', csv(rows(figure)));
+        status.textContent = '已下载 CSV';
+      } else if (button.dataset.action === 'download-svg') {
+        const svg = figure.querySelector('svg').cloneNode(true);
+        svg.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+        const source = new XMLSerializer().serializeToString(svg);
+        download(`${safeName(title)}.svg`, 'image/svg+xml;charset=utf-8', source);
+        status.textContent = '已下载 SVG';
+      }
+      setTimeout(() => { status.textContent = ''; }, 2200);
+    } catch (error) {
+      status.textContent = '操作失败，请展开数据表手动复制';
+    }
+  });
+})();
+</script>
+</body>
+</html>

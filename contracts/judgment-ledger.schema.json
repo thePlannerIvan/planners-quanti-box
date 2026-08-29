@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "QuantiBox judgment ledger v3",
+  "type": "object",
+  "required": ["schema_version", "context_id", "judgments"],
+  "properties": {
+    "schema_version": { "const": "3.0" },
+    "context_id": { "type": "string", "pattern": "^[a-z][a-z0-9_-]*$" },
+    "judgments": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["judgment_id", "title", "decision_question", "fact_refs", "interpretation", "decision_change", "action_status", "counterevidence", "claim_status"],
+        "properties": {
+          "judgment_id": { "type": "string", "pattern": "^[a-z][a-z0-9_-]*$" },
+          "title": { "type": "string", "minLength": 1 },
+          "decision_question": { "type": "string", "minLength": 1 },
+          "fact_refs": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "pattern": "^[a-z][a-z0-9_-]*$" } },
+          "interpretation": { "type": "string", "minLength": 1 },
+          "decision_change": { "type": "string", "minLength": 1 },
+          "action_status": { "enum": ["direct", "test-first", "data-needed", "no-action"] },
+          "action": { "type": "string", "minLength": 1 },
+          "counterevidence": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } },
+          "claim_status": { "enum": ["verified", "conditional", "exploratory", "unresolved"] }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

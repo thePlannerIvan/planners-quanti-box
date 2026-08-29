@@ -1,0 +1,36 @@
+{
+  "schema_version": "3.0",
+  "tier": "quick",
+  "context": {
+    "context_id": "smoke-channel-decision",
+    "decision_owner": "工程测试负责人",
+    "decision_to_make": "判断当前渠道汇总是否足以支持渠道优劣排名。",
+    "current_strategy_or_hypothesis": "原假设是可直接使用渠道均值排名。",
+    "constraints": ["仅有四个月度汇总，无笔记级明细。"],
+    "success_criteria": ["识别当前数据是否足以排名。"],
+    "context_status": "confirmed",
+    "context_gaps": []
+  },
+  "evidence_viability": {
+    "status": "conditional",
+    "decision_impact": "可描述规模和异常敏感性，不支持渠道效果排名。",
+    "checks": ["结果有变异", "只有月度汇总", "无笔记级暴露分母"],
+    "recommended_route": "narrow"
+  },
+  "method_plan": {
+    "decision_question": "当前渠道规模与异常敏感性是否足以支持渠道优劣排名？",
+    "decision_recipe": null,
+    "primary_method": "descriptive-comparative",
+    "secondary_methods": [],
+    "planned_relations": ["渠道规模差异", "月度异常敏感性"],
+    "metric_contracts": [
+      {"contract_id":"channel-volume","observation_unit":"渠道×月","definition":"按渠道求和笔记数","denominator":null,"time_window":"fixture 四个月","allowed_uses":["样本规模描述"],"forbidden_uses":["渠道效果排名","因果解释"]},
+      {"contract_id":"channel-share","observation_unit":"渠道×月","definition":"渠道笔记数 / 全部渠道笔记数","denominator":"全部渠道笔记数","time_window":"fixture 四个月","allowed_uses":["样本构成描述"],"forbidden_uses":["总体份额外推"]},
+      {"contract_id":"monthly-engagement","observation_unit":"渠道×月","definition":"月度互动量","denominator":null,"time_window":"fixture 四个月","allowed_uses":["异常敏感性描述"],"forbidden_uses":["效果排名","原因归因"]}
+    ],
+    "steps": ["按渠道汇总规模", "检查 B 渠道逐月异常敏感性"],
+    "expected_outputs": ["规模事实", "排名边界"],
+    "quality_gates": ["分母与异常值检查"],
+    "boundaries": ["不解释为渠道效果或因果"]
+  }
+}

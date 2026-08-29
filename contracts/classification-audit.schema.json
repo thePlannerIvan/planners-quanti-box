@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "QuantiBox deep classification audit",
+  "type": "object",
+  "required": ["schema_version", "sample_plan", "first_review", "second_review", "disagreements", "revision_impact", "status"],
+  "properties": {
+    "schema_version": { "const": "1.0" },
+    "sample_plan": { "type": "string", "minLength": 1 },
+    "first_review": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/review" } },
+    "second_review": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/review" } },
+    "disagreements": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+    "revision_impact": { "type": "string", "minLength": 1 },
+    "status": { "enum": ["passed", "exploratory", "failed"] }
+  },
+  "$defs": {
+    "review": {
+      "type": "object",
+      "required": ["class_id", "sample_size", "error_count", "notes"],
+      "properties": {
+        "class_id": { "type": "string", "minLength": 1 },
+        "sample_size": { "type": "integer", "minimum": 1 },
+        "error_count": { "type": "integer", "minimum": 0 },
+        "notes": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

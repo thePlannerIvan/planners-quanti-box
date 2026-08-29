@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Planners Quanti Box data profile",
+  "type": "object",
+  "required": ["schema_version", "input", "snapshot", "row_count", "column_count", "columns"],
+  "properties": {
+    "schema_version": { "const": "1.1" },
+    "input": { "type": "string" },
+    "snapshot": {
+      "type": "object",
+      "required": ["sha256", "bytes"],
+      "properties": {
+        "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+        "bytes": { "type": "integer", "minimum": 0 }
+      },
+      "additionalProperties": false
+    },
+    "row_count": { "type": "integer", "minimum": 0 },
+    "column_count": { "type": "integer", "minimum": 0 },
+    "columns": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "non_null", "missing", "inferred_type"],
+        "properties": {
+          "name": { "type": "string" },
+          "non_null": { "type": "integer", "minimum": 0 },
+          "missing": { "type": "integer", "minimum": 0 },
+          "inferred_type": { "enum": ["number", "string"] }
+        },
+        "additionalProperties": true
+      }
+    }
+  },
+  "additionalProperties": true
+}

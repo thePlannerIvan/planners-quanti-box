@@ -1,0 +1,29 @@
+{
+  "schema_version": "3.0",
+  "context_id": "smoke-channel-decision",
+  "judgments": [
+    {
+      "judgment_id": "scale-judgment",
+      "title": "A 渠道承担了当前样本的大部分内容规模，但规模差异本身不能说明渠道效果更好",
+      "decision_question": "当前渠道规模与异常敏感性是否足以支持渠道优劣排名？",
+      "fact_refs": ["scale-finding"],
+      "interpretation": "A 的内容数分母更大，不能与单篇效率或投放增量混为同一结论。",
+      "decision_change": "应先分开规模和效率，不按内容总量直接做渠道优劣排名。",
+      "action_status": "no-action",
+      "counterevidence": ["该 fixture 没有单篇内容或投入数据，无法判断规模差异的来源。"],
+      "claim_status": "verified"
+    },
+    {
+      "judgment_id": "sensitivity-judgment",
+      "title": "B 渠道的高互动集中在 3 月单点，现有均值不足以支持渠道优劣排名",
+      "decision_question": "当前渠道规模与异常敏感性是否足以支持渠道优劣排名？",
+      "fact_refs": ["sensitivity-finding"],
+      "interpretation": "B 的点估计对一个月份敏感，样本内均值不稳定。",
+      "decision_change": "不应使用当前均值直接排名；需先补笔记级分布并做包含/排除 3 月的复算。",
+      "action_status": "data-needed",
+      "action": "补充笔记级分布，并在包含与排除 3 月两种口径下复算。",
+      "counterevidence": ["只有四个月度点，不能判断 3 月是真实结构变化还是偶发异常。"],
+      "claim_status": "conditional"
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "schema_version": "1.0",
+  "views": [
+    {"view_id": "channel-scale-view", "relation_id": "channel-scale", "decision_question": "渠道规模如何不同？", "operation": "按渠道求和笔记数", "expected_relation": "A 与 B 的规模差异", "status": "keep", "reason": "可计算且有限回答决策", "preferred_chart_family": "bar"},
+    {"view_id": "channel-sensitivity-view", "relation_id": "channel-scale", "decision_question": "B 渠道高值是否由单月驱动？", "operation": "比较 B 渠道逐月互动", "expected_relation": "3 月高于相邻月", "status": "keep", "reason": "检验均值敏感性", "preferred_chart_family": "line"}
+  ]
+}

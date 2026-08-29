@@ -1,0 +1,26 @@
+[
+  {
+    "id": "qt08-content-comparison-v3",
+    "data": "workspace:07-SkillLab/QuantiBoxTests/10_学习机与远像屏_竞品内容",
+    "prompt": "使用 $planners-quanti-box 检查四组竞品内容数据。先推荐方法、关系、预期信息和边界并等我确认，再交付可追溯 HTML。",
+    "focus": ["CP0绑定精确brief", "搜索结果不外推总体", "多文件规范化包", "result-finding-judgment闭环", "不把互动解释为效果"]
+  },
+  {
+    "id": "qt10-keyword-supply-v3",
+    "data": "workspace:07-SkillLab/QuantiBoxTests/08_新西兰旅行_大样本内容与关键词",
+    "prompt": "使用 $planners-quanti-box 检查内容表与关联词表，先说明哪些关系能分析、哪些口径不能直接相除，等我确认后完成报告。",
+    "focus": ["异构表dataset manifest", "禁止非对称供需率", "分类双轮复核", "未通过则exploratory", "series与图表指纹"]
+  },
+  {
+    "id": "time-series-guided-v3",
+    "data": "workspace:07-SkillLab/QuantiBoxTests/02_美津浓_商业投放与年度时序",
+    "prompt": "使用 $planners-quanti-box 检查年度与近30天数据，先推荐时序分析设计并等我确认，再分析阶段变化与异常敏感性。",
+    "focus": ["Guided而非伪Supported", "时间口径同质性", "阶段后验描述", "无识别设计不写campaign effect", "Standard完整链"]
+  },
+  {
+    "id": "classification-deep-v3",
+    "data": "workspace:07-SkillLab/QuantiBoxTests/01_美津浓_内容Journey分类",
+    "prompt": "使用 $planners-quanti-box 评估现有 Journey 分类。先说明分类审计方法并等我确认，再完成复核与报告。",
+    "focus": ["classification-audit合同", "逐类抽样", "两轮复核", "分歧与修正影响", "未通过只生成exploratory判断"]
+  }
+]

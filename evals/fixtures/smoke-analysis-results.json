@@ -1,0 +1,22 @@
+{
+  "schema_version": "3.0",
+  "input": {
+    "data_snapshot_sha256": "45ab40f19e9058a7a00ba0cd4f8571db6bd02b7ca349d83c0cf481031cc1943d",
+    "execution_brief_sha256": "bae0a688b306e9a2cdd896ba8dd8703eb72896c3044cc81a9eb33d441e2f9653",
+    "dataset_manifest_sha256": null,
+    "transformation_version": "smoke-v1"
+  },
+  "results": {
+    "a-notes": {"contract_id":"channel-volume","kind":"scalar","value":95},
+    "b-notes": {"contract_id":"channel-volume","kind":"scalar","value":18},
+    "total-notes": {"contract_id":"channel-volume","kind":"scalar","value":113},
+    "b-share": {"contract_id":"channel-share","kind":"scalar","value":0.1593},
+    "b-outlier": {"contract_id":"monthly-engagement","kind":"scalar","value":1},
+    "b-jan": {"contract_id":"monthly-engagement","kind":"scalar","value":720},
+    "b-feb": {"contract_id":"monthly-engagement","kind":"scalar","value":610},
+    "b-mar": {"contract_id":"monthly-engagement","kind":"scalar","value":1500},
+    "b-apr": {"contract_id":"monthly-engagement","kind":"scalar","value":760},
+    "channel-scale-series": {"contract_id":"channel-volume","kind":"series","value":[{"label":"A","value":95,"highlight":true},{"label":"B","value":18}]},
+    "channel-sensitivity-series": {"contract_id":"monthly-engagement","kind":"series","value":[{"label":"1月","value":720},{"label":"2月","value":610},{"label":"3月","value":1500,"highlight":true},{"label":"4月","value":760}]}
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "schema_version": "1.0",
+  "decision_question": "当前渠道数据是否支持效果排名？",
+  "viability": {"status": "conditional", "reasons": ["仅有月度汇总"], "recommended_route": "narrow"},
+  "roles": {"observation": ["渠道×月"], "outcome": ["互动量"], "group_or_exposure": ["渠道"], "time": ["月"], "hierarchy": [], "link": [], "control": [], "uncertainty": ["低基数", "异常月"]},
+  "candidate_relations": [
+    {"relation_id": "channel-scale", "family": "comparison", "question": "渠道规模如何不同？", "required_fields": ["渠道", "笔记数"], "computable": true, "evidence_strength": "medium", "decision_relevance": "medium", "status": "keep", "reason": "可回答规模而非效果"}
+  ]
+}

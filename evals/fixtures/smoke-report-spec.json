@@ -1,0 +1,50 @@
+{
+  "title": "渠道表现快速审计",
+  "subtitle": "工程 smoke 样例，不是正式业务结论。",
+  "tier": "quick",
+  "meta": { "数据来源": "Smoke fixture · 8 条月×渠道记录", "时间窗口": "1–4月" },
+  "metrics": {
+    "a-notes": { "result_id": "a-notes", "unit": "篇", "digits": 0, "format": "number" },
+    "b-notes": { "result_id": "b-notes", "unit": "篇", "digits": 0, "format": "number" },
+    "total-notes": { "result_id": "total-notes", "unit": "篇", "digits": 0, "format": "number" },
+    "b-share": { "result_id": "b-share", "format": "percent", "input_scale": "fraction", "digits": 1 },
+    "b-outlier": { "result_id": "b-outlier", "display": "1 / 4", "format": "text" },
+    "b-jan": { "result_id": "b-jan", "digits": 0, "format": "number" },
+    "b-feb": { "result_id": "b-feb", "digits": 0, "format": "number" },
+    "b-mar": { "result_id": "b-mar", "digits": 0, "format": "number" },
+    "b-apr": { "result_id": "b-apr", "digits": 0, "format": "number" }
+  },
+  "hero": {
+    "judgment_id": "sensitivity-judgment",
+    "eyebrow": "ENGINEERING SMOKE",
+    "headline": "B 渠道的高互动集中在 3 月单点，现有均值不足以支持渠道优劣排名",
+    "answer": "A 承担了主要内容规模；B 的互动均值对一个异常月份敏感，所以当前数据不支持渠道优劣排名。",
+    "evidence": ["A 渠道 {{metric:a-notes}}，B 渠道 {{metric:b-notes}}。", "B 渠道 3 月互动 {{metric:b-mar}}，高于相邻月份。"],
+    "action_status": "data-needed",
+    "action": "补充笔记级分布，并在包含与排除 3 月两种口径下复算。",
+    "limitation": "该数据只用于验证渲染器和低基数表达，不能支持投放决策。",
+    "conclusions": [
+      { "judgment_id": "scale-judgment", "title": "A 渠道承担了当前样本的大部分内容规模，但规模差异本身不能说明渠道效果更好", "summary": "规模与效率需分开。", "target": "scale" },
+      { "judgment_id": "sensitivity-judgment", "title": "B 渠道的高互动集中在 3 月单点，现有均值不足以支持渠道优劣排名", "summary": "均值对单月敏感。", "target": "sensitivity" }
+    ],
+    "kpis": [
+      { "label": "A 渠道笔记数", "metric": "a-notes", "note": "4 个月" },
+      { "label": "B 渠道份额", "metric": "b-share", "note": "18 / 113" },
+      { "label": "B 渠道异常月", "metric": "b-outlier", "note": "3 月" }
+    ]
+  },
+  "sections": [
+    {
+      "id": "scale", "judgment_id": "scale-judgment", "nav": "规模", "title": "A 渠道承担了当前样本的大部分内容规模，但规模差异本身不能说明渠道效果更好", "lede": "先看分母，再比较效率。",
+      "finding_refs": ["scale-finding"],
+      "charts": [{ "view_id": "channel-scale-view", "type": "bar", "kicker": "VOLUME", "title": "A 渠道笔记量高于 B", "subtitle": "四个月合计", "reading_guide": {"focus":"先看两条柱子的长度。","comparison":"比较 A 与 B 在同一横轴上的总量。","signal":"A 的柱长明显超过 B，因此规模优势来自累计笔记量。"}, "result_refs": ["a-notes","b-notes"], "data_ref": "channel-scale-series", "source": "Smoke fixture", "denominator": "n=8 条月×渠道记录", "note": "月度笔记数求和。" }]
+    },
+    {
+      "id": "sensitivity", "judgment_id": "sensitivity-judgment", "nav": "敏感性", "title": "B 渠道的高互动集中在 3 月单点，现有均值不足以支持渠道优劣排名", "lede": "当前数据需先做异常值复算。",
+      "finding_refs": ["sensitivity-finding"],
+      "charts": [{ "view_id": "channel-sensitivity-view", "type": "line", "kicker": "SENSITIVITY", "title": "B 渠道 3 月单点偏离相邻月份", "reading_guide": {"focus":"先看 3 月高亮点。","comparison":"把 3 月与前后月份放在同一纵轴比较。","signal":"只有 3 月明显抬升，说明高均值对单点敏感。"}, "result_refs": ["b-jan","b-feb","b-mar","b-apr"], "data_ref": "channel-sensitivity-series", "source": "Smoke fixture", "denominator": "B 渠道 4 个月", "note": "不证明 3 月上升原因。" }]
+    }
+  ],
+  "methodology": [{ "title": "数据来源、口径与边界", "content": ["笔记数为月度记录求和。", "缺少笔记级明细，不能识别内容驱动。"] }],
+  "next_steps": ["增加笔记级明细与中位数。"]
+}

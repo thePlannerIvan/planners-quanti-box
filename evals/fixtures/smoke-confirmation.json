@@ -1,0 +1,8 @@
+{
+  "schema_version": "3.0",
+  "status": "approved",
+  "proposal_sha256": "bae0a688b306e9a2cdd896ba8dd8703eb72896c3044cc81a9eb33d441e2f9653",
+  "data_snapshot_sha256": "45ab40f19e9058a7a00ba0cd4f8571db6bd02b7ca349d83c0cf481031cc1943d",
+  "confirmed_at": "2026-08-11T10:00:00+08:00",
+  "user_confirmation": {"decision":"approve","verbatim":"确认按这个方法、口径和边界执行 smoke 测试。"}
+}

@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "QuantiBox relation map",
+  "type": "object",
+  "required": ["schema_version", "decision_question", "viability", "roles", "candidate_relations"],
+  "properties": {
+    "schema_version": { "const": "1.0" },
+    "decision_question": { "type": "string", "minLength": 1 },
+    "viability": {
+      "type": "object",
+      "required": ["status", "reasons", "recommended_route"],
+      "properties": {
+        "status": { "enum": ["viable", "conditional", "fatal"] },
+        "reasons": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } },
+        "recommended_route": { "enum": ["proceed", "narrow", "stop-and-request-data", "separate-optional-task"] }
+      },
+      "additionalProperties": false
+    },
+    "roles": {
+      "type": "object",
+      "required": ["observation", "outcome", "group_or_exposure", "time", "hierarchy", "link", "control", "uncertainty"],
+      "additionalProperties": { "type": "array", "items": { "type": "string" } }
+    },
+    "candidate_relations": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["relation_id", "family", "question", "required_fields", "computable", "evidence_strength", "decision_relevance", "status", "reason"],
+        "properties": {
+          "relation_id": { "type": "string", "pattern": "^[a-z][a-z0-9_-]*$" },
+          "family": { "enum": ["comparison", "distribution", "composition", "association", "time", "flow", "network", "decomposition", "uncertainty"] },
+          "question": { "type": "string", "minLength": 1 },
+          "required_fields": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+          "computable": { "type": "boolean" },
+          "evidence_strength": { "enum": ["high", "medium", "low", "none"] },
+          "decision_relevance": { "enum": ["high", "medium", "low"] },
+          "status": { "enum": ["keep", "appendix", "reject"] },
+          "reason": { "type": "string", "minLength": 1 }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

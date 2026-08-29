@@ -1,0 +1,8 @@
+{
+  "schema_version": "3.0",
+  "context_id": "smoke-channel-decision",
+  "findings": [
+    {"finding_id":"scale-finding","type":"fact","title":"A 渠道在四个月合计记录了更多笔记","text":"A 渠道 95 篇，B 渠道 18 篇。","result_refs":["a-notes","b-notes","total-notes","channel-scale-series"],"evidence_level":"descriptive","robustness_status":"passed","source":"Smoke fixture，四个月度汇总","limitations":["规模不等于效果"]},
+    {"finding_id":"sensitivity-finding","type":"interpretation","title":"B 渠道的样本内均值容易被 3 月单点拉动","text":"3 月互动高于相邻月份，当前均值对单月敏感。","result_refs":["b-feb","b-mar","b-apr","channel-sensitivity-series"],"evidence_level":"comparative","robustness_status":"conditional","source":"Smoke fixture，B 渠道四个月","limitations":["不能判断异常原因"]}
+  ]
+}

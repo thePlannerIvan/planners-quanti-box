@@ -1,0 +1,142 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Planners Quanti Box report spec v3",
+  "type": "object",
+  "required": ["title", "tier", "metrics", "hero", "sections", "methodology"],
+  "properties": {
+    "title": { "type": "string", "minLength": 1 },
+    "subtitle": { "type": "string" },
+    "tier": { "enum": ["quick", "standard", "deep"] },
+    "meta": { "type": "object", "additionalProperties": { "type": ["string", "number"] } },
+    "metrics": {
+      "type": "object",
+      "minProperties": 1,
+      "propertyNames": { "pattern": "^[a-z][a-z0-9_-]*$" },
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "result_id": { "type": "string", "pattern": "^[a-z][a-z0-9_-]*$" },
+          "display": { "type": "string" },
+          "unit": { "type": "string" },
+          "digits": { "type": "integer", "minimum": 0, "maximum": 6 },
+          "format": { "enum": ["number", "percent", "currency", "compact", "text"] },
+          "input_scale": { "enum": ["fraction", "percent"] }
+        },
+        "required": ["result_id"],
+        "additionalProperties": false
+      }
+    },
+    "hero": {
+      "type": "object",
+      "required": ["judgment_id", "headline", "answer", "evidence", "action_status", "conclusions"],
+      "properties": {
+        "judgment_id": { "type": "string", "pattern": "^[a-z][a-z0-9_-]*$" },
+        "eyebrow": { "type": "string" },
+        "headline": { "type": "string", "minLength": 1 },
+        "answer": { "type": "string", "minLength": 1 },
+        "evidence": { "type": "array", "minItems": 1, "maxItems": 3, "items": { "type": "string", "minLength": 1 } },
+        "action_status": { "enum": ["direct", "test-first", "data-needed", "no-action"] },
+        "action": { "type": "string", "minLength": 1 },
+        "limitation": { "type": "string" },
+        "kpis": { "type": "array", "maxItems": 4 },
+        "conclusions": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 3,
+          "items": {
+            "type": "object",
+            "required": ["judgment_id", "title", "target"],
+            "properties": {
+              "judgment_id": { "type": "string", "pattern": "^[a-z][a-z0-9_-]*$" },
+              "title": { "type": "string", "minLength": 1 },
+              "summary": { "type": "string" },
+              "target": { "type": "string", "pattern": "^[a-z0-9-]+$" }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "sections": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "title", "judgment_id"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+          "judgment_id": { "type": "string", "pattern": "^[a-z][a-z0-9_-]*$" },
+          "nav": { "type": "string" },
+          "title": { "type": "string", "minLength": 1 },
+          "lede": { "type": "string" },
+          "appendix": { "type": "boolean" },
+          "finding_refs": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": { "type": "string", "pattern": "^[a-z][a-z0-9_-]*$" }
+          },
+          "charts": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["view_id", "type", "title", "reading_guide", "result_refs", "source", "denominator", "data_ref"],
+              "properties": {
+                "view_id": { "type": "string", "pattern": "^[a-z][a-z0-9_-]*$" },
+                "type": { "enum": ["bar", "line", "dot", "diverging-bar", "scatter", "dumbbell", "stacked-bar", "normalized-stacked-bar", "heatmap", "histogram", "ecdf", "box", "interval", "strip", "small-multiple-line", "slope", "bubble", "quadrant"] },
+                "kicker": { "type": "string" },
+                "title": { "type": "string", "minLength": 1 },
+                "subtitle": { "type": "string" },
+                "reading_guide": {
+                  "type": "object",
+                  "required": ["focus", "comparison", "signal"],
+                  "properties": {
+                    "focus": { "type": "string", "minLength": 1 },
+                    "comparison": { "type": "string", "minLength": 1 },
+                    "signal": { "type": "string", "minLength": 1 }
+                  },
+                  "additionalProperties": false
+                },
+                "result_refs": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "pattern": "^[a-z][a-z0-9_-]*$" } },
+                "alt": { "type": "string" },
+                "unit": { "type": "string" },
+                "digits": { "type": "integer", "minimum": 0, "maximum": 6 },
+                "format": { "enum": ["number", "percent", "currency", "compact"] },
+                "input_scale": { "enum": ["fraction", "percent"] },
+                "source": { "type": "string", "minLength": 1 },
+                "denominator": { "type": "string", "minLength": 1 },
+                "note": { "type": "string" },
+                "benchmark": { "type": "number" },
+                "benchmark_label": { "type": "string" },
+                "highlight": { "type": "string" },
+                "x_label": { "type": "string" },
+                "y_label": { "type": "string" },
+                "data_ref": { "type": "string", "pattern": "^[a-z][a-z0-9_-]*$" }
+              },
+              "additionalProperties": true
+            }
+          },
+          "table": { "type": "object" }
+        },
+        "additionalProperties": true
+      }
+    },
+    "methodology": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["title", "content"],
+        "properties": {
+          "title": { "type": "string", "minLength": 1 },
+          "content": { "type": ["string", "array"], "items": { "type": "string", "minLength": 1 } }
+        },
+        "additionalProperties": false
+      }
+    },
+    "next_steps": { "type": "array" },
+    "footer": { "type": "string" }
+  },
+  "additionalProperties": true
+}
