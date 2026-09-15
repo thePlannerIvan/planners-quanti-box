@@ -6,7 +6,6 @@
     "files": [
       "evals/fixtures/smoke-data.csv",
       "evals/fixtures/smoke-execution-brief.json",
-      "evals/fixtures/smoke-confirmation.json",
       "evals/fixtures/smoke-findings-ledger.json",
       "evals/fixtures/smoke-judgment-ledger.json",
       "evals/fixtures/smoke-analysis-results.json",
@@ -16,11 +15,11 @@
       "data profile 报告 8 行、6 列",
       "结果汇总包含 A/B 两组且分母不丢失",
       "HTML 不含 CDN 依赖或未替换占位符",
-      "HTML 页眉包含‘阿祖不看红绿灯 · demyth.info’屏幕与打印水印，不存在 QUANTI BOX 中央/右下角水印",
+      "HTML 页眉包含‘阿祖不看 TVC · demyth.info’屏幕与打印水印，不存在 QUANTI BOX 中央/右下角水印",
       "HTML 包含图表数据表格降级、打印和 reduced-motion 样式",
       "结论卡可跳转到对应证据章节",
       "每张图可复制数据并下载 CSV/SVG",
-      "HTML 与 brief / confirmation / findings / judgment / report spec / results 指纹一致",
+      "HTML 与 brief / findings / judgment / report spec / results 指纹一致",
       "Hero 和章节只引用正式 judgment/finding；finding 可回到具体 result 与 metric contract",
       "百分比尺度与单位显式，重复单位直接失败",
       "时序图包含刻度与网格，标题使用非衬线视觉系统"

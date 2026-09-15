@@ -39,8 +39,8 @@ description: 通用定量决策分析与离线 HTML 报告 Skill。用于 CSV、
 1. 完整读取 `stages/00-task-and-data.md` 和 `stages/01-analysis-design.md`，生成 `execution-brief.json` 与面向用户的简洁方案。
 2. 展示：数据能回答什么、推荐方法、拟检查关系、步骤、预期信息和不能回答的问题。
 3. **停止并等待用户明确批准或修改。**“直接分析”“做一轮测试”或其他任务指令不是方法批准。
-4. 批准后保存最小 `confirmation-record.json`：用户原话、`approve`、数据快照哈希、execution brief 哈希和时间。
-5. 运行 `node scripts/validate_run.mjs RUN_DIRECTORY --stage cp0`。批准未绑定当前 brief 时不得继续。
+4. 用户确认后把 **确认范围** 写成一句话，放进报告的数据与方法章节：批准了什么、没批准什么。不落确认记录文件，不做哈希绑定——CP0 是人的决定，不是机器的状态；机器能验的只有"某个字符串非空"，那既不能证明批准发生过，也会逼模型写一份看起来像证据的东西。
+5. 运行 `node scripts/validate_run.mjs RUN_DIRECTORY --stage design`，只校验 `execution-brief.json` 与 `data-profile.json` 的 schema 与绑定。
 
 ## 执行路由
 
@@ -65,7 +65,7 @@ description: 通用定量决策分析与离线 HTML 报告 Skill。用于 CSV、
 - 每个 result 绑定数据快照、execution brief、转换版本；Standard/Deep 还绑定 dataset manifest。
 - 每个 finding 引用具体 result ID；failed finding 不得进入 judgment；报告只引用 ledger。
 - 分类没有真实抽样、错分记录、两轮复核和修正前后变化时，只能产生 exploratory 判断。
-- HTML 使用统一渲染器、离线单文件、页眉水印 `阿祖不看红绿灯 · demyth.info`，完成后直接打开。
+- HTML 使用统一渲染器、离线单文件、页眉水印 `阿祖不看 TVC · demyth.info`，完成后直接打开。
 
 ## 机器与人的边界
 
@@ -79,7 +79,7 @@ description: 通用定量决策分析与离线 HTML 报告 Skill。用于 CSV、
 固定顺序：
 
 ```text
-node scripts/validate_run.mjs RUN_DIRECTORY --stage cp0
+node scripts/validate_run.mjs RUN_DIRECTORY --stage design
 node scripts/validate_run.mjs RUN_DIRECTORY --stage preflight
 node scripts/render_run.mjs RUN_DIRECTORY
 node scripts/validate_run.mjs RUN_DIRECTORY --stage final

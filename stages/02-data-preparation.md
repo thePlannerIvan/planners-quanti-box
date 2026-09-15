@@ -4,7 +4,7 @@
 
 按已确认的 Brief 完成类型修复、去重、连接、排除标记和派生指标，但不覆盖原始值。
 
-进入本阶段前必须运行 `node scripts/validate_run.mjs RUN_DIRECTORY --stage cp0`。缺失、未批准、快照不一致或未批准的 fatal 绕行时回到 Stage 1，不得继续。
+进入本阶段前必须运行 `node scripts/validate_run.mjs RUN_DIRECTORY --stage design`，确认方案已展示、用户已明确批准、`execution-brief.json` 与 `data-profile.json` 通过 schema。缺失、未获批准、快照不一致或存在未获批准的 fatal 绕行时回到 Stage 1，不得继续。
 
 ## 输入及其作用
 

@@ -51,18 +51,18 @@ Decision to make
 
 然后停止。没有用户回复不得继续。
 
-## 确认记录
+## 确认与交接
 
 用户明确确认或修改后：
 
-- 保存 `confirmation-record.json`，包含 `status: approved`、数据快照 SHA-256、决策语境、Recipe、主/辅方法、问题、预期输出、边界、确认时间和用户原话。
-- 不得代写用户确认原话；用户要求修改时重新展示 proposal 并再次确认。
+- 把**确认范围**写成一句话，放进报告的数据与方法章节：批准了什么、没批准什么、哪些方法细节由执行者自行设计。不落确认记录文件，不做哈希绑定。
+- 不得代为宣布用户批准，也不得把"没有反对"当成批准；用户要求修改时重新展示方案并再次确认。
 - 将唯一权威设计保存为 `execution-brief.json`，其中包含 tier、决策语境、Evidence Viability、方法、metric contracts、允许/禁止操作与计划关系。不要再创建独立 decision-context 或 analysis-brief。
-- 运行 `node scripts/validate_run.mjs RUN_DIRECTORY --stage cp0`。
+- 运行 `node scripts/validate_run.mjs RUN_DIRECTORY --stage design`。
 
 ## 完成标准
 
 - 用户知道数据是什么、当前决策如何被理解、为何采用该方法、会得到什么，并明确批准。
-- 确认记录字段完整，绑定当前数据快照和决策语境。
+- 确认范围已写成一句话放进报告（批准了什么、没批准什么）；不落确认记录文件，也不声称机器能证明批准发生过。
 - `fatal` 时已默认停止；只有用户明确批准一个重新定义的独立问题才可继续。
 - Validator 不能证明推荐真的最合适或用户真正理解了取舍。

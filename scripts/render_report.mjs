@@ -7,8 +7,8 @@ import { parseArgs } from './lib/data.mjs';
 import { loadAndValidateSchema } from './lib/schema.mjs';
 
 const args = parseArgs(process.argv.slice(2));
-if (!args._[0] || !args.output || !args.confirmation || !args.judgments || !args.findings || !args.brief) {
-  console.error('Usage: node render_report.mjs REPORT_SPEC.json --output report.html [--markdown report.md] --results results.json --findings findings-ledger.json --judgments judgment-ledger.json --confirmation confirmation-record.json --brief execution-brief.json [--template path]');
+if (!args._[0] || !args.output || !args.judgments || !args.findings || !args.brief) {
+  console.error('Usage: node render_report.mjs REPORT_SPEC.json --output report.html [--markdown report.md] --results results.json --findings findings-ledger.json --judgments judgment-ledger.json --brief execution-brief.json [--template path]');
   process.exit(2);
 }
 
@@ -331,7 +331,7 @@ function renderSpec(spec, metrics, judgmentMap, findingMap, results) {
   const methods=(spec.methodology??[]).map(m=>`<details><summary>${text(m.title)}</summary><div>${Array.isArray(m.content)?list(m.content,text):`<p>${text(m.content)}</p>`}</div></details>`).join('');
   const actionLabels={direct:'可直接决策','test-first':'先验证','data-needed':'需要补数据','no-action':'暂不行动'};
   const actionBlock=`<p class="hero-action" data-action-status="${esc(spec.hero.action_status)}"><b>${esc(actionLabels[spec.hero.action_status])}</b>${spec.hero.action?text(spec.hero.action):''}</p>`;
-  return `<header class="topbar"><div class="brand">QUANTI BOX</div><nav>${spec.sections.filter(s=>!s.appendix).map(s=>`<a href="#${esc(s.id)}">${esc(s.nav??s.title)}</a>`).join('')}</nav><div class="personal-watermark" aria-label="作者水印">阿祖不看红绿灯 · demyth.info</div></header><main><section class="hero" data-judgment-id="${esc(spec.hero.judgment_id)}"><div class="meta">${meta}</div><p class="eyebrow">${esc(spec.hero.eyebrow??'DECISION REPORT')}</p><h1>${text(spec.hero.headline)}</h1><p class="answer">${text(spec.hero.answer)}</p><ul class="hero-evidence">${spec.hero.evidence.map(v=>`<li>${text(v)}</li>`).join('')}</ul>${actionBlock}<div class="conclusion-links">${conclusions}</div>${kpis?`<div class="kpis">${kpis}</div>`:''}${spec.hero.limitation?`<aside class="limitation"><b>重要边界</b>${text(spec.hero.limitation)}</aside>`:''}</section>${sections}<section id="method" class="method"><div class="section-number">METHOD</div><h2>数据、口径与复算</h2>${methods}</section>${spec.next_steps?.length?`<section class="next"><div class="section-number">NEXT</div><h2>下一步</h2>${list(spec.next_steps,text)}</section>`:''}</main><footer>${text(spec.footer??'本报告由已审核的判断与聚合结果生成。')}</footer>`;
+  return `<header class="topbar"><div class="brand">QUANTI BOX</div><nav>${spec.sections.filter(s=>!s.appendix).map(s=>`<a href="#${esc(s.id)}">${esc(s.nav??s.title)}</a>`).join('')}</nav><div class="personal-watermark" aria-label="作者水印">阿祖不看 TVC · demyth.info</div></header><main><section class="hero" data-judgment-id="${esc(spec.hero.judgment_id)}"><div class="meta">${meta}</div><p class="eyebrow">${esc(spec.hero.eyebrow??'DECISION REPORT')}</p><h1>${text(spec.hero.headline)}</h1><p class="answer">${text(spec.hero.answer)}</p><ul class="hero-evidence">${spec.hero.evidence.map(v=>`<li>${text(v)}</li>`).join('')}</ul>${actionBlock}<div class="conclusion-links">${conclusions}</div>${kpis?`<div class="kpis">${kpis}</div>`:''}${spec.hero.limitation?`<aside class="limitation"><b>重要边界</b>${text(spec.hero.limitation)}</aside>`:''}</section>${sections}<section id="method" class="method"><div class="section-number">METHOD</div><h2>数据、口径与复算</h2>${methods}</section>${spec.next_steps?.length?`<section class="next"><div class="section-number">NEXT</div><h2>下一步</h2>${list(spec.next_steps,text)}</section>`:''}</main><footer>${text(spec.footer??'本报告由已审核的判断与聚合结果生成。')}</footer>`;
 }
 
 function renderMarkdown(spec, metrics, findingMap) {
@@ -368,14 +368,12 @@ try {
   const specText=fs.readFileSync(args._[0],'utf8'),spec=JSON.parse(specText);
   const resultsText=args.results?fs.readFileSync(args.results,'utf8'):null,results=resultsText?JSON.parse(resultsText):null;
   const findingsText=fs.readFileSync(args.findings,'utf8'),findings=JSON.parse(findingsText);
-  const confirmationText=fs.readFileSync(args.confirmation,'utf8'),confirmation=JSON.parse(confirmationText);
   const briefText=fs.readFileSync(args.brief,'utf8'),brief=JSON.parse(briefText);
   const judgmentsText=fs.readFileSync(args.judgments,'utf8'),judgments=JSON.parse(judgmentsText);
   const here=path.dirname(fileURLToPath(import.meta.url));
   loadAndValidateSchema(path.resolve(here,'../contracts/report-spec.schema.json'),spec,'report-spec');
   loadAndValidateSchema(path.resolve(here,'../contracts/analysis-results.schema.json'),results,'analysis-results');
   loadAndValidateSchema(path.resolve(here,'../contracts/findings-ledger.schema.json'),findings,'findings-ledger');
-  loadAndValidateSchema(path.resolve(here,'../contracts/confirmation-record.schema.json'),confirmation,'confirmation-record');
   loadAndValidateSchema(path.resolve(here,'../contracts/execution-brief.schema.json'),brief,'execution-brief');
   loadAndValidateSchema(path.resolve(here,'../contracts/judgment-ledger.schema.json'),judgments,'judgment-ledger');
   if(judgments.context_id!==brief.context.context_id||findings.context_id!==brief.context.context_id)throw new Error('Findings/judgments are not bound to the execution context.');
@@ -393,7 +391,7 @@ try {
   const metrics=compileMetrics(spec,results);
   const templatePath=args.template??path.resolve(here,'../assets/report-shell.html');
   const template=fs.readFileSync(templatePath,'utf8');
-  const fingerprints=`<meta name="quanti-spec-sha256" content="${sha256(specText)}"><meta name="quanti-results-sha256" content="${sha256(resultsText)}"><meta name="quanti-findings-sha256" content="${sha256(findingsText)}"><meta name="quanti-judgments-sha256" content="${sha256(judgmentsText)}"><meta name="quanti-confirmation-sha256" content="${sha256(confirmationText)}"><meta name="quanti-brief-sha256" content="${sha256(briefText)}">`;
+  const fingerprints=`<meta name="quanti-spec-sha256" content="${sha256(specText)}"><meta name="quanti-results-sha256" content="${sha256(resultsText)}"><meta name="quanti-findings-sha256" content="${sha256(findingsText)}"><meta name="quanti-judgments-sha256" content="${sha256(judgmentsText)}"><meta name="quanti-brief-sha256" content="${sha256(briefText)}">`;
   const html=template.replace('{{REPORT_FINGERPRINTS}}',fingerprints).replaceAll('{{TITLE}}',esc(spec.title)).replace('{{REPORT_CONTENT}}',renderSpec(spec,metrics,judgmentMap,findingMap,results));
   fs.mkdirSync(path.dirname(path.resolve(args.output)),{recursive:true});fs.writeFileSync(args.output,html,'utf8');
   if(args.markdown){fs.mkdirSync(path.dirname(path.resolve(args.markdown)),{recursive:true});fs.writeFileSync(args.markdown,renderMarkdown(spec,metrics,findingMap),'utf8');}

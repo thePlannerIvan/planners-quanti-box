@@ -53,6 +53,7 @@
 - 百分比 metric 明确 `format: percent` 与 `input_scale: fraction|percent`。
 - 标题、正文和 KPI 复用 report metric token，而每个 token 绑定具体 scalar result。图表 `result_refs` 声明支持图表判断的具体结果，`data_ref` 绑定唯一 series。series point 禁止出现 `metric / x_metric / y_metric / size_metric / start_metric / end_metric / low_metric / mid_metric / high_metric`。
 - 章节只保存 `finding_refs`；finding 的标题、正文、类型和来源从正式 ledger 渲染，report spec 不复制第二份。
+- **`source` 与 `denominator` 是写给读者看的，不是写给机器看的。** 写"数据集 + 时间窗 + 口径"这类可读描述（例如「世界杯笔记层 · 每品牌 200 条 · 2026-06-18 ~ 2026-07-02」），**不得出现内部文件名与脚本路径**（`*.jsonl`、`*.csv`、`work/*.py`、`normalized-dataset` 之类）。回源路径已经由 manifest 与 ledger 承载，不需要在读者面前再印一遍。判断标准：把正文单独截出来给客户看，里面不该有任何他无法理解的字符串。
 - Hero 和每个主章节引用存在的 judgment ID；报告不得自造 judgment。
 
 ## 产物与完成标准

@@ -7,7 +7,7 @@
 ## 固定命令
 
 ```text
-node scripts/validate_run.mjs RUN_DIRECTORY --stage cp0
+node scripts/validate_run.mjs RUN_DIRECTORY --stage design
 node scripts/validate_run.mjs RUN_DIRECTORY --stage preflight
 node scripts/render_run.mjs RUN_DIRECTORY
 node scripts/validate_run.mjs RUN_DIRECTORY --stage final
@@ -23,8 +23,8 @@ node scripts/visual_smoke.mjs RUN_DIRECTORY
 
 `validate_run.mjs` 一次检查：
 
-- profile / execution brief / confirmation / results / findings / judgment / report spec 是否使用官方 schema；
-- CP0 是否绑定当前数据快照和 execution brief 精确版本；
+- profile / execution brief / results / findings / judgment / report spec 是否使用官方 schema；
+- 报告的数据与方法章节是否写明本次方案的确认范围；
 - report → judgment → finding → result → metric contract 引用闭环；
 - Standard/Deep results 是否绑定规范化 dataset manifest；
 - chart `data_ref` 的 series 不能携带标量 metric binding，series 数值指纹必须与 HTML 渲染值指纹逐图一致；

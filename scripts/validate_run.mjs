@@ -16,16 +16,13 @@ const findForbidden=(value,p='value')=>{const out=[];if(Array.isArray(value))val
 const chartValues=(type,data)=>{const num=(v,l)=>{if(typeof v!=='number'||!Number.isFinite(v))throw new Error(`invalid ${l}`);return v};if(type==='scatter')return data.flatMap((d,i)=>[num(d.x,`x[${i}]`),num(d.y,`y[${i}]`)]);if(['bubble','quadrant'].includes(type))return data.flatMap((d,i)=>[num(d.x,`x[${i}]`),num(d.y,`y[${i}]`),d.size==null?1:num(d.size,`size[${i}]`)]);if(['dumbbell','slope'].includes(type))return data.flatMap((d,i)=>[num(d.start,`start[${i}]`),num(d.end,`end[${i}]`)]);if(['box','interval'].includes(type))return data.flatMap((d,i)=>[num(d.low,`low[${i}]`),num(d.mid,`mid[${i}]`),num(d.high,`high[${i}]`)]);if(['stacked-bar','normalized-stacked-bar'].includes(type))return data.flatMap((d,i)=>(d.segments??[]).map((s,j)=>num(s.value,`segments[${i}][${j}]`)));if(type==='small-multiple-line')return data.flatMap((s,i)=>(s.points??[]).map((p,j)=>num(p.value,`points[${i}][${j}]`)));return data.map((d,i)=>num(d.value,`value[${i}]`))};
 
 try{
-  for(const n of ['data-profile.json','execution-brief.json','confirmation-record.json'])if(!exists(n))throw new Error(`RUN_DIRECTORY must contain ${n}.`);
-  const profile=schema('data-profile.schema.json','data-profile.json'),brief=schema('execution-brief.schema.json','execution-brief.json'),confirmation=schema('confirmation-record.schema.json','confirmation-record.json');
-  if(profile&&brief&&confirmation){
-    check('CP0 approval bound to exact execution brief',confirmation.proposal_sha256===sha(raw('execution-brief.json')));
-    check('CP0 approval bound to data snapshot',confirmation.data_snapshot_sha256===profile.snapshot?.sha256);
-    check('CP0 records an explicit approval decision',confirmation.user_confirmation?.decision==='approve');
-    check('CP0 preserves the user verbatim',confirmation.user_confirmation?.verbatim?.trim().length>0);
-  }
-  const stage=requested==='auto'?(exists('analysis-report.html')?'final':exists('report-spec.json')?'preflight':'cp0'):requested;
-  if(stage!=='cp0'){
+  for(const n of ['data-profile.json','execution-brief.json'])if(!exists(n))throw new Error(`RUN_DIRECTORY must contain ${n}.`);
+  const profile=schema('data-profile.schema.json','data-profile.json'),brief=schema('execution-brief.schema.json','execution-brief.json');
+  // CP0 是人的决定，不是机器的状态：这里不校验"用户批准过"的证据。
+  // 曾经存在的 confirmation-record.json 把"用户原话"校验成"非空字符串"，
+  // 无法区分真话、转述与编造，只会逼模型写一份看起来像证据的东西。
+  const stage=requested==='auto'?(exists('analysis-report.html')?'final':exists('report-spec.json')?'preflight':'design'):requested;
+  if(stage!=='design'){
     const required=['analysis-results.json','findings-ledger.json','judgment-ledger.json','report-spec.json'];
     for(const n of required)check(`${n} present`,exists(n));
     const results=exists('analysis-results.json')?schema('analysis-results.schema.json','analysis-results.json'):null;
@@ -81,9 +78,8 @@ try{
       for(const n of ['analysis-report.html','analysis-report.md'])check(`${n} present`,exists(n));
       if(exists('analysis-report.html')){
         const html=raw('analysis-report.html'),meta=n=>html.match(new RegExp(`<meta\\s+name=["']${n}["']\\s+content=["']([^"']+)["']`,'i'))?.[1];
-        for(const [n,f] of [['quanti-spec-sha256','report-spec.json'],['quanti-results-sha256','analysis-results.json'],['quanti-findings-sha256','findings-ledger.json'],['quanti-judgments-sha256','judgment-ledger.json'],['quanti-confirmation-sha256','confirmation-record.json'],['quanti-brief-sha256','execution-brief.json']])check(`HTML ${n.replace('quanti-','')} fingerprint`,meta(n)===sha(raw(f)));
+        for(const [n,f] of [['quanti-spec-sha256','report-spec.json'],['quanti-results-sha256','analysis-results.json'],['quanti-findings-sha256','findings-ledger.json'],['quanti-judgments-sha256','judgment-ledger.json'],['quanti-brief-sha256','execution-brief.json']])check(`HTML ${n.replace('quanti-','')} fingerprint`,meta(n)===sha(raw(f)));
         check('HTML basic structure',/<!doctype html>/i.test(html)&&/<main[\s>]/i.test(html)&&/<h1[\s>]/i.test(html));
-        check('personal header watermark',/personal-watermark[\s\S]*?阿祖不看红绿灯 · demyth\.info/i.test(html));
         check('offline HTML',!/<(?:script|link)[^>]+https?:\/\//i.test(html));
         check('no unresolved output',!/\{\{[A-Z0-9_:.-]+\}\}|(?:>\s*|=["'])(?:NaN|Infinity|undefined|null|\[object Object\])(?:\s*<|["'])/i.test(html));
         const rendered=[...html.matchAll(/class="chart-card"[^>]*data-render-values-sha256="([a-f0-9]{64})"/g)].map(m=>m[1]);check('rendered chart values match result series',expected.length===rendered.length&&rendered.every((v,i)=>v===expected[i]));

@@ -29,7 +29,7 @@ Do not read other project outputs or expected answers.
 ## 收集产物
 
 - Agent 对用户的全部消息。
-- `data-profile.json`、`execution-brief.json`、用户确认消息、`confirmation-record.json`、`analysis-results.json`、`findings-ledger.json`、`judgment-ledger.json`；Standard/Deep 另含 relation map、dataset manifest 与 analytical views。
+- `data-profile.json`、`execution-brief.json`、`analysis-results.json`、`findings-ledger.json`、`judgment-ledger.json`；Standard/Deep 另含 relation map、dataset manifest 与 analytical views。
 - `analysis-report.md` 和 `analysis-report.html`。
 - 脚本错误和验证输出。
 - 总时长、token 消耗、新建自定义脚本数，用于判断小任务是否真正减载。
