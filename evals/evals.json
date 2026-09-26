@@ -15,7 +15,7 @@
       "data profile 报告 8 行、6 列",
       "结果汇总包含 A/B 两组且分母不丢失",
       "HTML 不含 CDN 依赖或未替换占位符",
-      "HTML 页眉包含‘阿祖不看 TVC · demyth.info’屏幕与打印水印，不存在 QUANTI BOX 中央/右下角水印",
+      "HTML 页眉包含与公共件 planners-report-kit/contracts/attribution.json 的 watermark 一致的屏幕与打印水印，不存在 QUANTI BOX 中央/右下角水印",
       "HTML 包含图表数据表格降级、打印和 reduced-motion 样式",
       "结论卡可跳转到对应证据章节",
       "每张图可复制数据并下载 CSV/SVG",

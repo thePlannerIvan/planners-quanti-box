@@ -5,6 +5,8 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parseArgs } from './lib/data.mjs';
 import { loadAndValidateSchema } from './lib/schema.mjs';
+import { spawnSync } from 'node:child_process';
+import { moduleScript } from './lib/planners-modules.mjs';
 
 const args=parseArgs(process.argv.slice(2)),runDir=path.resolve(args._[0]??'.'),requested=args.stage??'auto';
 const root=path.dirname(path.dirname(fileURLToPath(import.meta.url))),file=n=>path.join(runDir,n),exists=n=>fs.existsSync(file(n)),raw=n=>fs.readFileSync(file(n),'utf8'),read=n=>JSON.parse(raw(n)),sha=t=>crypto.createHash('sha256').update(t).digest('hex');
@@ -41,6 +43,30 @@ try{
         check('manifest table paths stay inside run directory',resolved.every(p=>p===runDir||p.startsWith(runDir+path.sep)));
         check('all manifest tables exist',resolved.every(p=>fs.existsSync(p)));
         check('all manifest table hashes match',manifest.tables.every((t,i)=>fs.existsSync(resolved[i])&&sha(fs.readFileSync(resolved[i]))===t.sha256));
+      }
+      // 来源索引 = 文件级账目（哈希 / 字节 / 覆盖）。契约与校验器在公共件 planners-source-index。
+      if(exists('source-index.json')){
+        const siPath=file('source-index.json');
+        let conforms=null;
+        try{
+          const cli=moduleScript('planners-source-index','scripts/validate-source-index.mjs');
+          const result=spawnSync(process.execPath,[cli,siPath],{encoding:'utf8',maxBuffer:16*1024*1024});
+          conforms=JSON.parse(result.stdout);
+        }catch(error){check('source index validator runs',false,error.message);}
+        if(conforms)check('source index conforms to source-index/2.0.0',conforms.valid,(conforms.errors||[]).map(e=>`[${e.code}] ${e.message}`).join('；'));
+        if(manifest){
+          // 一跳：来源索引认领的表必须就是 manifest 登记的表；反过来每张表都要有来源认领
+          const siDir=path.dirname(siPath),manifestDir=path.dirname(file('dataset-manifest.json'));
+          let si=null;try{si=JSON.parse(fs.readFileSync(siPath,'utf8'));}catch{/* 上面已报 */ }
+          if(si){
+            const declared=new Set(manifest.tables.map(t=>path.resolve(manifestDir,t.path)));
+            const claimed=(si.sources||[]).filter(x=>x.audit_layer?.mode==='normalized_table').map(x=>path.resolve(siDir,x.audit_layer.path));
+            check('every source-index claim points at a manifest table',claimed.every(one=>declared.has(one)));
+            check('every manifest table is claimed by a source',[...declared].every(one=>claimed.includes(one)));
+          }
+        }
+      }else{
+        check('standard/deep run has source index',false,'normalize_data.mjs 应同时产出 source-index.json');
       }
     }
     if(results&&brief&&profile){
@@ -80,7 +106,13 @@ try{
         const html=raw('analysis-report.html'),meta=n=>html.match(new RegExp(`<meta\\s+name=["']${n}["']\\s+content=["']([^"']+)["']`,'i'))?.[1];
         for(const [n,f] of [['quanti-spec-sha256','report-spec.json'],['quanti-results-sha256','analysis-results.json'],['quanti-findings-sha256','findings-ledger.json'],['quanti-judgments-sha256','judgment-ledger.json'],['quanti-brief-sha256','execution-brief.json']])check(`HTML ${n.replace('quanti-','')} fingerprint`,meta(n)===sha(raw(f)));
         check('HTML basic structure',/<!doctype html>/i.test(html)&&/<main[\s>]/i.test(html)&&/<h1[\s>]/i.test(html));
-        check('offline HTML',!/<(?:script|link)[^>]+https?:\/\//i.test(html));
+        // 离线契约（外部依赖 / 水印 / 打印样式 / 未解析占位符）归公共件 planners-report-kit
+        try{
+          const reportValidator=moduleScript('planners-report-kit','scripts/validate-report.mjs');
+          const result=spawnSync(process.execPath,[reportValidator,path.join(runDir,'analysis-report.html')],{encoding:'utf8'});
+          const parsed=JSON.parse(result.stdout);
+          check('report.html satisfies the offline contract',parsed.valid,(parsed.errors||[]).map(e=>`[${e.code}] ${e.message}`).join('；'));
+        }catch(error){check('report.html offline validator runs',false,error.message);}
         check('no unresolved output',!/\{\{[A-Z0-9_:.-]+\}\}|(?:>\s*|=["'])(?:NaN|Infinity|undefined|null|\[object Object\])(?:\s*<|["'])/i.test(html));
         const rendered=[...html.matchAll(/class="chart-card"[^>]*data-render-values-sha256="([a-f0-9]{64})"/g)].map(m=>m[1]);check('rendered chart values match result series',expected.length===rendered.length&&rendered.every((v,i)=>v===expected[i]));
       }

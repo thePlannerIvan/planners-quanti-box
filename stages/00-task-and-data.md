@@ -53,6 +53,7 @@
 ## 产物与完成标准
 
 - Standard/Deep 保存 `data-profile.json` 和 `relation-map.json`；Quick 保存 profile，并把决策语境直接进入唯一 `execution-brief.json`。
+- **材料没有被整份读入时必须说出来**：规范化那一步会在 `source-index.json` 里给每个输入记覆盖状态；只取一张 Sheet、只抽样、或明确排除的输入，要写成 `partial` / `sampled` / `excluded` 并说明实际读到哪、为什么、会让哪些判断不成立。**没有这个声明，读者只能假定全量。**
 - 观察单位、范围、时间、指标、数据生成机制和主要风险已清楚。
 - 决策对象、当前策略/假设、约束、成功标准与缺口均有明确状态。
 - Validator 只能证明文件和字段存在，不能证明业务语境已被正确理解。

@@ -44,6 +44,10 @@
 
 Standard / Deep 产出 `dataset-manifest.json`，它登记一个或多个类型化规范表的相对路径、哈希、行数和观察单位，并用 `source_snapshot_sha256` 绑定 CP0 profile。使用 `normalize_data.mjs` 时传入 `--source-snapshot PROFILE_SHA256`。Stage 3 只能读取 manifest 中位于 run directory 内且哈希匹配的表；Quick 可直接绑定原数据快照，不强制造规范化副本。
 
+`normalize_data.mjs` **同时产出 `source-index.json`**（公共件 `planners-source-index` 的 `source-index/2.0.0`）：这是**文件级**账目 —— 每个输入的原文件哈希与字节数、覆盖状态、以及它在规范化表里的行区间。它与 manifest 的**表级**账目（行数、观察单位）各管一层，`validate_run.mjs` 校验两者的一跳对应。
+
+**输入没有整份读入时**（只取一张 Sheet、只抽样、或明确排除），必须声明：`--coverage-status partial|sampled` 配 `--coverage-scope`（实际读到哪）与 `--impact`（会让哪些判断不成立）。**这是「没读到的部分」在这一家唯一的落点** —— 过去它完全没有这个字段，下游会把部分覆盖当成全量。
+
 ## 产物与完成标准
 
 - 产物：`normalized-dataset.*`、可选数据字典、`transformation-log.md`。

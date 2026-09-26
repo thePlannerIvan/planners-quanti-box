@@ -1,7 +1,10 @@
 #!/usr/bin/env node
 import crypto from 'node:crypto';
 import fs from 'node:fs';
+import os from 'node:os';
 import path from 'node:path';
+import { spawnSync } from 'node:child_process';
+import { moduleScript } from './lib/planners-modules.mjs';
 import { fileURLToPath } from 'node:url';
 import { parseArgs } from './lib/data.mjs';
 import { loadAndValidateSchema } from './lib/schema.mjs';
@@ -331,7 +334,7 @@ function renderSpec(spec, metrics, judgmentMap, findingMap, results) {
   const methods=(spec.methodology??[]).map(m=>`<details><summary>${text(m.title)}</summary><div>${Array.isArray(m.content)?list(m.content,text):`<p>${text(m.content)}</p>`}</div></details>`).join('');
   const actionLabels={direct:'可直接决策','test-first':'先验证','data-needed':'需要补数据','no-action':'暂不行动'};
   const actionBlock=`<p class="hero-action" data-action-status="${esc(spec.hero.action_status)}"><b>${esc(actionLabels[spec.hero.action_status])}</b>${spec.hero.action?text(spec.hero.action):''}</p>`;
-  return `<header class="topbar"><div class="brand">QUANTI BOX</div><nav>${spec.sections.filter(s=>!s.appendix).map(s=>`<a href="#${esc(s.id)}">${esc(s.nav??s.title)}</a>`).join('')}</nav><div class="personal-watermark" aria-label="作者水印">阿祖不看 TVC · demyth.info</div></header><main><section class="hero" data-judgment-id="${esc(spec.hero.judgment_id)}"><div class="meta">${meta}</div><p class="eyebrow">${esc(spec.hero.eyebrow??'DECISION REPORT')}</p><h1>${text(spec.hero.headline)}</h1><p class="answer">${text(spec.hero.answer)}</p><ul class="hero-evidence">${spec.hero.evidence.map(v=>`<li>${text(v)}</li>`).join('')}</ul>${actionBlock}<div class="conclusion-links">${conclusions}</div>${kpis?`<div class="kpis">${kpis}</div>`:''}${spec.hero.limitation?`<aside class="limitation"><b>重要边界</b>${text(spec.hero.limitation)}</aside>`:''}</section>${sections}<section id="method" class="method"><div class="section-number">METHOD</div><h2>数据、口径与复算</h2>${methods}</section>${spec.next_steps?.length?`<section class="next"><div class="section-number">NEXT</div><h2>下一步</h2>${list(spec.next_steps,text)}</section>`:''}</main><footer>${text(spec.footer??'本报告由已审核的判断与聚合结果生成。')}</footer>`;
+  return `<header class="topbar"><div class="brand">QUANTI BOX</div><nav>${spec.sections.filter(s=>!s.appendix).map(s=>`<a href="#${esc(s.id)}">${esc(s.nav??s.title)}</a>`).join('')}</nav><div class="personal-watermark" aria-label="作者水印">{{WATERMARK}}</div></header><main><section class="hero" data-judgment-id="${esc(spec.hero.judgment_id)}"><div class="meta">${meta}</div><p class="eyebrow">${esc(spec.hero.eyebrow??'DECISION REPORT')}</p><h1>${text(spec.hero.headline)}</h1><p class="answer">${text(spec.hero.answer)}</p><ul class="hero-evidence">${spec.hero.evidence.map(v=>`<li>${text(v)}</li>`).join('')}</ul>${actionBlock}<div class="conclusion-links">${conclusions}</div>${kpis?`<div class="kpis">${kpis}</div>`:''}${spec.hero.limitation?`<aside class="limitation"><b>重要边界</b>${text(spec.hero.limitation)}</aside>`:''}</section>${sections}<section id="method" class="method"><div class="section-number">METHOD</div><h2>数据、口径与复算</h2>${methods}</section>${spec.next_steps?.length?`<section class="next"><div class="section-number">NEXT</div><h2>下一步</h2>${list(spec.next_steps,text)}</section>`:''}</main><footer>${text(spec.footer??'本报告由已审核的判断与聚合结果生成。')}</footer>`;
 }
 
 function renderMarkdown(spec, metrics, findingMap) {
@@ -390,10 +393,19 @@ try {
   const ids=spec.sections.map(s=>s.id); if(new Set(ids).size!==ids.length)throw new Error('Section ids must be unique.');
   const metrics=compileMetrics(spec,results);
   const templatePath=args.template??path.resolve(here,'../assets/report-shell.html');
-  const template=fs.readFileSync(templatePath,'utf8');
   const fingerprints=`<meta name="quanti-spec-sha256" content="${sha256(specText)}"><meta name="quanti-results-sha256" content="${sha256(resultsText)}"><meta name="quanti-findings-sha256" content="${sha256(findingsText)}"><meta name="quanti-judgments-sha256" content="${sha256(judgmentsText)}"><meta name="quanti-brief-sha256" content="${sha256(briefText)}">`;
-  const html=template.replace('{{REPORT_FINGERPRINTS}}',fingerprints).replaceAll('{{TITLE}}',esc(spec.title)).replace('{{REPORT_CONTENT}}',renderSpec(spec,metrics,judgmentMap,findingMap,results));
-  fs.mkdirSync(path.dirname(path.resolve(args.output)),{recursive:true});fs.writeFileSync(args.output,html,'utf8');
+  // 装配归公共件 planners-report-kit（落点、水印、未解析就不写盘）；本 Skill 保留骨架与图表。
+  // 内容可能很大（内联 SVG），所以走临时文件而不是命令行参数。
+  const scratch=fs.mkdtempSync(path.join(os.tmpdir(),'quanti-report-'));
+  const contentPath=path.join(scratch,'content.html'),mapPath=path.join(scratch,'placeholders.json');
+  fs.writeFileSync(contentPath,renderSpec(spec,metrics,judgmentMap,findingMap,results),'utf8');
+  fs.writeFileSync(mapPath,JSON.stringify({REPORT_FINGERPRINTS:fingerprints,TITLE:esc(spec.title)}),'utf8');
+  const kit=moduleScript('planners-report-kit','scripts/render-report.mjs');
+  const assembled=spawnSync(process.execPath,[kit,'--frame',templatePath,'--content',contentPath,'--placeholders',mapPath,'--out',path.resolve(args.output)],{encoding:'utf8'});
+  fs.rmSync(scratch,{recursive:true,force:true});
+  process.stdout.write(assembled.stdout??'');
+  if(assembled.status!==0){process.stderr.write(assembled.stderr??'');process.exit(assembled.status??1);}
+  fs.mkdirSync(path.dirname(path.resolve(args.output)),{recursive:true});
   if(args.markdown){fs.mkdirSync(path.dirname(path.resolve(args.markdown)),{recursive:true});fs.writeFileSync(args.markdown,renderMarkdown(spec,metrics,findingMap),'utf8');}
   console.log(`Rendered ${spec.sections.length} section(s), ${judgmentIds.length} judgment(s), ${Object.keys(metrics).length} metric(s), confirmed method ${brief.method_plan.primary_method} -> ${args.output}`);
 } catch(error){console.error(error.message);process.exit(1);}

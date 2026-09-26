@@ -52,6 +52,22 @@ node scripts/test_contracts.mjs
 node scripts/test_report_pipeline.mjs
 ```
 
+## 目录结构
+
+```text
+planners-quanti-box/
+├── SKILL.md
+├── agents/openai.yaml
+├── assets/report-shell.html
+├── contracts/           # 数据画像、执行简报、结果、发现与判断账本契约
+├── evals/               # 自带测试、语言配对评估与真实数据测试清单
+├── methods/             # 方法注册表、决策配方与经验注册表
+├── playbooks/           # 描述比较、时序、分群、驱动、漏斗、推断、实验、情景
+├── references/          # 图表选择、证据与因果、判断合成、关系发现、问卷质量门
+├── scripts/             # 数据检视与规范化、报告装配与渲染、契约校验
+└── stages/              # 00–07 分阶段工作流
+```
+
 ## 授权、署名与商业支持
 
 - 以 [AGPL-3.0-only](LICENSE) 发布；

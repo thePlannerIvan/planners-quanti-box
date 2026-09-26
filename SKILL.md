@@ -30,7 +30,7 @@ description: 通用定量决策分析与离线 HTML 报告 Skill。用于 CSV、
 
 ## 任务分档
 
-- **Quick**：单表、低风险描述/比较、1–3 个 findings。保留 CP0 和四个权威接口；允许不落 `relation-map`、`analytical-views`、`dataset-manifest`。
+- **Quick**：单表、低风险描述/比较、1–3 个 findings。保留 CP0 和四个权威接口；允许不落 `relation-map`、`analytical-views`、`dataset-manifest`、`source-index`（后两者由 `normalize_data.mjs` 一起产出，Quick 可直接绑定原数据快照）。
 - **Standard**：多维、跨表、分布、分层或需正式 HTML。增加 Relation Map、Analytical Views 和规范化数据包。
 - **Deep**：分类、推断、驱动、因果或预测。沿用 Standard，并加载专项 Gate；分类未完成两轮真实复核时，相关 judgment 必须为 `exploratory`。
 
@@ -87,3 +87,13 @@ node scripts/visual_smoke.mjs RUN_DIRECTORY
 ```
 
 工程通过与语义 Forward Test 分开陈述。运行经验只有在尚未被 Stage、脚本或合同吸收且能改变未来行为时，才进入 `methods/experience-registry.md`。
+
+## 为什么不做审阅面（`scripts/test_no_review_surface.mjs` 钉住这条）
+
+CP0 是这一家唯一的人的决定，而它**保留在对话里**：`stages/01-analysis-design.md` 的「给用户的确认界面」本身就是给人读的自然语言，用户会问"为什么推荐这个方法""换成那个口径会怎样" —— 这类协商需要**模型在旁边**，而公共审阅缝的表达力是"**一页 → 写一份文件 → 醒一次**"。挂上去等于用一页静态纸换掉一场正在进行的对话，还会让 `.json` 侧多出一份确认记录，与 0.3.0 的裁定相反（"CP0 是人的决定，不是机器的状态"）。
+
+`scripts/test_no_review_surface.mjs` 扫**整棵 Skill 树**，任何缝的标志物（桥的注入点、公共桥的全局对象、缝的契约文件与宿主、收件层文件、自起服务器）一出现即红 —— 这样它真的会在"有人把确认机器加回来"的那天红，而不是靠"这些文件今天本来就不存在"永远为真。
+
+| 脚本 | 用途 |
+|---|---|
+| `scripts/test_no_review_surface.mjs` | 防回退回归：扫整棵 Skill 树，出现任何公共审阅缝的标志物（`{{REVIEW_BRIDGE}}` / `ReviewBridge` / `review-surface.json` / `review-host.mjs` / 反馈文件 / 自起服务器）即红 |

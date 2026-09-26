@@ -1,5 +1,24 @@
 # Changelog
 
+## 2026-09-26 — 0.5.0（报告装配交给公共件）
+
+- `scripts/render_report.mjs` 的装配段改为调用 `planners-report-kit`（报告内容可能很大，走临时文件而不是命令行参数）；**图表渲染仍留在本 Skill**（399 行内联 SVG 逻辑不该被抽走）。
+- 水印文字改成 `{{WATERMARK}}`，值来自公共件的唯一来源。
+- `validate_run.mjs` 的「离线 HTML」检查改为调用公共校验器；`evals/evals.json` 的水印断言不再写死字面量，改成「与公共件 `attribution.json` 一致」。**断言一个常量就是把错误永久化** —— 0.2.0 的「阿祖不看红绿灯」正是这么被自洽通过的。
+
+
+## 2026-09-26 — 0.4.0（补上 file 级来源账目）
+
+**起因**：这一家只有**表级**账目（`dataset-manifest`：行数、观察单位、表哈希），**完全没有 per-file 的覆盖状态**。于是「没读到的部分」在这里是空的 —— 只取了一张 Sheet、只抽样一般，下游都会当成全量。
+
+- **新增 `source-index.json`**（公共件 `planners-source-index` 的 `source-index/2.0.0`），由 `normalize_data.mjs` 与规范化表和 manifest 一起产出：每个输入的**原文件哈希与字节数**、`audit_layer{mode:"normalized_table"}` 绑到规范化表、`coverage.status` + `counts.rows`、`anchors[]` 给出它在表里的行区间。
+- **两条账目分层**：manifest 管表（行数 / 观察单位），来源索引管**文件**（哈希 / 字节 / 覆盖 / 锚点）。不合并 —— 粒度不同，并进 `sources[]` 会让它混两种粒度。
+- **`validate_run.mjs` 新增两件事**：跑公共校验器验 `source-index.json`；做**一跳校验** —— 来源索引认领的表必须就是 manifest 登记的表，反过来每张表都要有来源认领。
+- **覆盖状态终于可声明**：`--coverage-status partial|sampled|excluded|unread` 配 `--coverage-scope` / `--coverage-reason` / `--impact`。
+- **双绑定**：`derived_from_sha256` 绑**原文件哈希**，`snapshot_sha256` 绑 **CP0 已确认快照** —— 两个都在，正是这家最强的那一处。
+
+**证据**：`/tmp/quanti-smoke` 与 `/tmp/quanti-full` —— 正常产出 0 警告通过公共校验器；一跳校验正确夹具 3 PASS，把 `audit_layer.path` 改成不存在的表后 3 FAIL。四个自带测试（`validate_skill` / `test_contracts` / `test_report_pipeline` / `test_chart_types`）全部通过。
+
 ## 2026-09-13 — 0.3.0（删除 CP0 证据机器）
 
 起因：同一次实跑里，执行代理写下的 `confirmation-record.json` 把一段**自己写的说明**放进了 `user_confirmation.verbatim`（"用户原话"）字段——而机器对这个字段的检查只有 `verbatim.trim().length > 0`。代理做得极其诚实，但**恰恰是这份诚实证明了这道检查是空的**：一句真话、一段转述、一段编造，在机器眼里完全等价。而且不能怪代理——在"用户授权代理决策"的编排场景里，真实的 verbatim 根本产生不出来。
