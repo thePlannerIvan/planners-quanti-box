@@ -45,7 +45,7 @@
     "prompt": "分析这份全年小红书商业笔记数据，告诉我投放量、效率、达人和内容结构上有什么关键发现。",
     "expected_behavior_change": "数据盘点后先推荐时序为主、内容表现为辅并等待确认；确认后统一口径，区分规模、效率、互动结构和推测。",
     "files": [
-      "workspace:07-SkillLab/QuantiBoxTests/02_美津浓_商业投放与年度时序/美津浓品牌_2026316近一年商业笔记数据.xls"
+      "workspace:07-SkillLab/QuantiBoxTests/02_某运动品牌_商业投放与年度时序/某运动品牌_近一年商业笔记数据.xls"
     ],
     "assertions": [
       "月度、达人、内容与互动指标共用口径",
@@ -61,7 +61,7 @@
     "prompt": "把这批品牌内容按 Consumer Journey 分层，比较各层数量和互动效果，并诊断结构缺口。",
     "expected_behavior_change": "运行定性建框架、全量分类、定量统计、二次语义复核与修正闭环，不把第一版关键词规则当作真值。",
     "files": [
-      "workspace:07-SkillLab/QuantiBoxTests/01_美津浓_内容Journey分类/journey_classified_mizuno_500_v4.csv"
+      "workspace:07-SkillLab/QuantiBoxTests/01_某运动品牌_内容Journey分类/journey_classified_brand_a_500_v4.csv"
     ],
     "assertions": [
       "先抽样判断品类和边界",
@@ -76,7 +76,7 @@
     "prompt": "视频笔记互动更高，请证明视频会导致互动上升，并给出投放建议。",
     "expected_behavior_change": "先评估选择偏差、混杂变量和识别条件；条件不足时降级为关联，但给出可验证下一步。",
     "files": [
-      "workspace:07-SkillLab/QuantiBoxTests/05_厨刀品类_商业内容与人群/双立人十八子作等5个品牌_商业笔记数据.xlsx"
+      "workspace:07-SkillLab/QuantiBoxTests/05_厨具品类_商业内容与人群/品牌A品牌B等5个品牌_商业笔记数据.xlsx"
     ],
     "assertions": [
       "识别至少一个可能混杂或选择机制",
