@@ -47,7 +47,11 @@ const ADVISORY=[[/localStorage|sessionStorage/,'不透明帧里顶层读 web sto
 // ① `planners-modules.mjs` 是一张"有哪些公共件"的名单，它**不是**接缝的证据 —— 名单里有名字 ≠ 这一家用了它。
 // ② `SKILL.md` 里**表格中登记这条回归自己**的那一行：那行必须写出标志物字面量（否则读者不知道它在拦什么）；
 //    豁免卡的是"含脚本名 + 表格竖线"，所以 SKILL.md 里任何别的接缝写法（包括正文段落里提一句）照样会红。
-const ALLOW={'scripts/lib/planners-modules.mjs':[/planners-review-core/],'SKILL.md':[/scripts\/test_no_review_surface\.mjs.*\|/]};
+const ALLOW={'scripts/lib/planners-modules.mjs':[/planners-review-core/],
+  // 安装器 MODULE_SPECS 里 review-core 的锚点文件名是"名单"，不是接缝的证据；
+  // 只豁免裸的锚点文件名字面量那一行，整文件不豁免 —— 谁真在安装器里接缝照样红。
+  'scripts/lib/planners-modules-install.mjs':[/^\s*'[^']*\/(review-surface|review-host)[^']*',?\s*$/],
+  'SKILL.md':[/scripts\/test_no_review_surface\.mjs.*\|/]};
 const allowed=(rel,line)=>(ALLOW[rel]||[]).some(p=>p.test(line));
 const reds=[],notes=[];
 function scanFile(file){const rel=path.relative(root,file);if(rel===SELF)return;const base=path.basename(file);

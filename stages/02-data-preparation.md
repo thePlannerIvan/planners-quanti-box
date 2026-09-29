@@ -48,7 +48,7 @@ Standard / Deep 产出 `dataset-manifest.json`，它登记一个或多个类型�
 
 **输入没有整份读入时**（只取一张 Sheet、只抽样、或明确排除），必须声明：`--coverage-status partial|sampled` 配 `--coverage-scope`（实际读到哪）与 `--impact`（会让哪些判断不成立）。**这是「没读到的部分」在这一家唯一的落点** —— 过去它完全没有这个字段，下游会把部分覆盖当成全量。
 
-## 产物与完成标准
+## 完成标准
 
 - 产物：`normalized-dataset.*`、可选数据字典、`transformation-log.md`。
 - 语义完成：关键指标能追回原始列和处理原则。

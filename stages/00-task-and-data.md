@@ -50,7 +50,7 @@
 - 不创建 `analysis-results.json`、正式 finding、judgment 或 HTML。
 - 不虚构用户当前策略或成功标准。
 
-## 产物与完成标准
+## 完成标准
 
 - Standard/Deep 保存 `data-profile.json` 和 `relation-map.json`；Quick 保存 profile，并把决策语境直接进入唯一 `execution-brief.json`。
 - **材料没有被整份读入时必须说出来**：规范化那一步会在 `source-index.json` 里给每个输入记覆盖状态；只取一张 Sheet、只抽样、或明确排除的输入，要写成 `partial` / `sampled` / `excluded` 并说明实际读到哪、为什么、会让哪些判断不成立。**没有这个声明，读者只能假定全量。**

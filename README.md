@@ -111,8 +111,12 @@ CP0 是硬门槛：只有用户明确批准与当前数据快照绑定的 `execu
 ## 开发与验证
 
 ```bash
+node scripts/validate_skill.mjs             # 结构 + 陈旧引用黑名单
 node scripts/test_contracts.mjs
 node scripts/test_report_pipeline.mjs
+node scripts/test_chart_types.mjs
+node scripts/test_no_review_surface.mjs     # 钉住「不做审阅面」这条裁定
+node scripts/lib/planners-modules-install.test.mjs
 ```
 
 ## 目录结构

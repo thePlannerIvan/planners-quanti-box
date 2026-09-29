@@ -56,7 +56,7 @@ smoke 通过后，对桌面全页做一次人工或视觉模型审阅，只重�
 
 只在 smoke/审阅发现异常、使用新图表类型或修改共用模板后再次截图。不做 7–9 张图的逐张多轮 AI 审阅。
 
-## 完成与打开
+## 完成标准
 
 - 实测一个结论跳转和一种图表导出。
 - 从 hero/section 随机抽一条判断，人工回到 finding、metric、dataset、transformation 和 source。

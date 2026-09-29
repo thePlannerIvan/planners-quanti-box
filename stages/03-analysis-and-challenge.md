@@ -13,7 +13,7 @@
 5. 分类任务记录逐类抽样、错分、两轮复核、仲裁和修正前后变化。缺任一环节，相关 finding 最多为 `conditional`，judgment 必须为 `exploratory`。
 6. finding 只引用 result ID；`failed` finding 保留审计但不得进入 judgment。
 
-## 产物
+## 完成标准
 
 - `analysis-results.json`：按 `contracts/analysis-results.schema.json`。
 - `findings-ledger.json`：按 `contracts/findings-ledger.schema.json`。
